@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>نظام تقييم مخاطر الائتمان الذكي</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%8F%A6</text></svg>">
+    <style>
+        :root {
+            --bg-top: #fff6e9;
+            --bg-bottom: #e6f2ff;
+            --ink: #1f2a37;
+            --muted: #5b6777;
+            --card: #ffffff;
+            --accent: #ff8a4c;
+            --accent-2: #1f7ae0;
+            --ring: rgba(31, 122, 224, 0.2);
+        }
+
+        /* سؤال القسم الأول: ما فائدة استخدام --accent بدلاً من كتابة كود اللون مباشرة؟ */
+        /* الإجابة: لتسهيل تغيير اللون في كامل الموقع من مكان واحد فقط (المتغير الرئيسي). */
+
+        /* القسم الثاني: تنسيق الهيكل والحركات (Layout & Animations) */
+        /* الشرح: نجعل الموقع يتوسط الشاشة ونضيف حركة "الظهور العائم" عند فتح الصفحة */
+        body {
+            font-family: "Cairo", sans-serif;
+            background: linear-gradient(160deg, var(--bg-top), var(--bg-bottom));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 24px;
+        }
+
+        .container {
+            background: var(--card);
+            padding: 32px;
+            border-radius: 20px;
+            box-shadow: 0 16px 40px rgba(31, 42, 55, 0.12);
+            width: min(460px, 92vw);
+            animation: float-in 700ms ease-out both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes float-in {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* سؤال القسم الثاني: ماذا تفعل خاصية box-shadow؟ */
+        /* الإجابة: تعطي ظلاً خلف البطاقة يجعلها تبدو مرتفعة وعائمة فوق الخلفية. */
+
+        /* القسم الثالث: تنسيق المدخلات والأزرار (Form Elements) */
+        /* الشرح: جعل الخانات سهلة القراءة وتضيف تأثيراً عند الضغط عليها (Focus) */
+        .field { display: grid; gap: 6px; margin-bottom: 15px; }
+        
+        label { font-size: 13px; color: var(--muted); font-weight: 600; }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-2);
+            box-shadow: 0 0 0 4px var(--ring);
+        }
+
+        button {
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        /* سؤال القسم الثالث: لماذا نستخدم transition في الـ input؟ */
+        /* الإجابة: لجعل ظهور ظل الـ Focus وتغير الألوان يحدث بنعومة وليس بشكل مفاجئ. */
+
+        /* القسم الرابع: عرض النتائج والنسب (Results & Bars) */
+        /* الشرح: تصميم منطقة عرض قرار الموديل مع شريط تقدم ملون يوضح نسبة الأمان */
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 15px;
+            background: #f9fbff;
+            border: 1px dashed #d7e3f5;
+            text-align: center;
+        }
+
+        .bar-container {
+            background-color: #eee;
+            border-radius: 10px;
+            height: 12px;
+            width: 100%;
+            margin: 15px 0;
+        }
+
+        .bar {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 1.5s ease-in-out; /* حركة تعبئة الشريط */
+        }
+
+        .explanation-tag {
+            background: #f0f7ff;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: inline-block;
+            margin-top: 10px;
+            border: 1px solid #dbeafe;
+        }
+
+        /* سؤال القسم الرابع: كيف نتحكم في طول الشريط الأخضر برمجياً؟ */
+        /* الإجابة: باستخدام لغة Jinja2 عبر كود style="width: {{ prob_safe }}%". */
+
+        /* القسم الخامس: نصيحة المستقبل (XAI Section) */
+        /* الشرح: صندوق معلومات يشرح للمستخدم مفاهيم الذكاء الاصطناعي القابل للتفسير */
+        .future-tip {
+            background-color: #fff9f0;
+            border-right: 4px solid var(--accent);
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        /* سؤال القسم الخامس: ماذا يعني اختصار XAI؟ */
+        /* الإجابة: Explainable Artificial Intelligence (الذكاء الاصطناعي القابل للتفسير). */
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>تقييم مخاطر القروض</h1>
+    <p class="lead">أدخل بيانات العميل للحصول على تحليل دقيق.</p>
+
+    <form action="/predict" method="post">
+        <div class="field">
+            <label>العمر</label>
+            <input type="number" name="person_age" placeholder="مثال: 30" required>
+        </div>
+        <div class="field">
+            <label>الدخل السنوي ($)</label>
+            <input type="number" name="person_income" placeholder="مثال: 50000" required>
+        </div>
+        <div class="field">
+            <label>قيمة القرض المطلوبة ($)</label>
+            <input type="number" name="loan_amnt" placeholder="مثال: 15000" required>
+        </div>
+        <div class="field">
+            <label>نسبة الفائدة (%)</label>
+            <input type="number" step="0.1" name="loan_int_rate" placeholder="مثال: 11.5" required>
+        </div>
+        <div class="field">
+            <label>مدة الخبرة الوظيفية (بالسنوات)</label>
+            <input type="number" name="person_emp_length" placeholder="مثال: 5" required>
+        </div>
+
+        <div class="field">
+            <label>طول السجل الائتماني (بالسنوات)</label>
+            <input type="number" name="cb_person_cred_hist_length" placeholder="مثال: 7" required>
+        </div>
+        
+        <button type="submit">بدء التحليل الذكي</button>
+    </form>
+
+    {% if prediction_text %}
+    <div class="result">
+        <h3 style="color: {{ color }}">{{ prediction_text }}</h3>
+        
+        <div class="probability-box">
+            <p>مستوى الثقة في الأمان: <strong>{{ prob_safe }}%</strong></p>
+            <div class="bar-container">
+                <div class="bar" style="width: {{ prob_safe }}%; background-color: {{ color }};"></div>
+            </div>
+        </div>
+
+        <div class="explanation-tag">
+            🔍 العامل الأكثر تأثيراً في هذا القرار: <strong>{{ top_feature }}</strong>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+
+        <div class="future-tip">
+            <strong>💡 رؤية مستقبلية (XAI):</strong><br>
+            هذا النظام يستخدم خوارزميات متقدمة لتحليل المخاطر. نحن نعمل على تطوير ميزة "لماذا؟" لتوضيح الأسباب الاقتصادية الدقيقة خلف كل قرار ائتماني.
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+</body>
+</html>
